@@ -12,7 +12,14 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return response()->json(Category::all(), 200);
+        try {
+            return Category::all();
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 500
+            ], 500);
+        }
     }
 
     /**

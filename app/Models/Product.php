@@ -14,4 +14,13 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function scopeFilter($query, $filters)
+    {
+        if (isset($filters['category'])) {
+            $query->whereHas('category', function ($catQuery) use ($filters) {
+                $catQuery->where('name', $filters['category']);
+            });
+        }
+    }
 }
