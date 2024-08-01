@@ -44,14 +44,14 @@ class ProductController extends Controller
     public function show($id)
     {
         try {
-            $recipe = Product::find($id);
-            if (!$recipe) {
+            $product = Product::find($id);
+            if (!$product) {
                 return response()->json([
                     'message' => 'Product not found',
                     'status' => 404
                 ], 404);
             }
-            return $recipe;
+            return $product;
         } catch (Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
