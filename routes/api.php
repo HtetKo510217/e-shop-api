@@ -16,4 +16,5 @@ Route::get('/categories', [CategoryController::class, 'index']);
 
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{product}', [ProductController::class, 'show']);
+Route::delete('/products/{product}', [ProductController::class, 'destroy']);
 Route::get('/orders', [OrderController::class, 'index']);
