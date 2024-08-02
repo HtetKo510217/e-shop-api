@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Filament\Resources;
-
+use App\Filament\Resources\ProductResource\RelationManagers\CategoryRelationManager;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\FileUpload;
 
 class ProductResource extends Resource
 {
@@ -23,7 +24,26 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                //
+                 Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\Textarea::make('description')
+                    ->maxLength(65535),
+                Forms\Components\TextInput::make('price')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('stock')
+                    ->required()
+                    ->maxLength(255),
+                FileUpload::make('photo')
+                ->image('photo_preview'),
+                
+                Forms\Components\Select::make('category_id')
+                ->relationship('category', 'name')
+                ->required(),
+
+                Forms\Components\Hidden::make('id'),
+
             ]);
     }
 
@@ -35,7 +55,7 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('description')->limit(30),
                 Tables\Columns\TextColumn::make('price'),
                 Tables\Columns\TextColumn::make('stock'),
-                Tables\Columns\TextColumn::make('photo'),
+                Tables\Columns\ImageColumn::make('photo'),
                 Tables\Columns\TextColumn::make('category.name'),
             ])
             ->filters([
@@ -54,7 +74,7 @@ class ProductResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\CategoryRelationManager::class,
         ];
     }
 
