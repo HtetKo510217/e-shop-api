@@ -23,7 +23,15 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('total')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('status')
+                    ->required()
+                    ->maxLength(255),
+                    Forms\Components\Select::make('user_id')
+                    ->relationship('user', 'name')
+                    ->required(),
             ]);
     }
 
@@ -41,6 +49,7 @@ class OrderResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

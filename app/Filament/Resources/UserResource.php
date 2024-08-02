@@ -23,7 +23,17 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->required()
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('password')
+                    ->password()
+                
             ]);
     }
 
@@ -38,6 +48,7 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
