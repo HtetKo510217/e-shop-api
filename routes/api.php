@@ -20,6 +20,7 @@ Route::get('/products/{product}', [ProductController::class, 'show']);
 Route::delete('/products/{product}', [ProductController::class, 'destroy']);
 
 Route::get('/orders', [OrderController::class, 'index']);
+Route::post('/orders', [OrderController::class, 'store']);
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);

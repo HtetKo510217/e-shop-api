@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -12,7 +14,14 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return response()->json(Order::all(), 200);
+        try {
+            return Order::all();
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 500
+            ], 500);
+        }
     }
 
     /**
@@ -28,7 +37,35 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            //validation
+            $validator = Validator::make(request()->all(), [
+                'total' => 'required',
+                'user_id' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                $flatteredErrors = collect($validator->errors())->flatMap(function ($e, $field) {
+                    return [$field => $e[0]];
+                });
+                return response()->json([
+                    'errors' => $flatteredErrors,
+                    'status' => 400
+                ], 400);
+            }
+
+            $order = new Order();
+            $order->total = request('total');
+            $order->user_id = request('user_id');
+            $order->save();
+
+            return response()->json($order, 201);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 500
+            ], 500);
+        }
     }
 
     /**
