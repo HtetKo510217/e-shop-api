@@ -23,3 +23,4 @@ Route::get('/orders', [OrderController::class, 'index']);
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->patch('/update-profile', [AuthController::class, 'updateProfile']);

@@ -62,4 +62,27 @@ class AuthController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
+    public function updateProfile(Request $request)
+    {
+        try {
+            $user = $request->user(); 
+
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 400);
+            }
+
+            $user->update($request->only('name', 'email'));
+
+            return response()->json(['message' => 'User updated successfully', 'user' => $user], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
 }

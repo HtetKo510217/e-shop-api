@@ -10,10 +10,20 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            return Product::filter(request(['category']))->paginate(6);
+            $filters = $request->only('category');
+            $searchQuery = $request->input('search', '');
+            $sortBy = $request->input('sort', 'popularity');
+            
+            $query = Product::filter($filters)
+                            ->search($searchQuery)
+                            ->sortBy($sortBy);
+
+            $products = $query->paginate(6);
+            return response()->json($products);
+    
         } catch (Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
