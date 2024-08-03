@@ -71,10 +71,36 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Order $order)
+    public function show(Request $request)
     {
-        //
+        try {
+            $userId = $request->query('user_id');
+
+            if (!$userId) {
+                return response()->json([
+                    'message' => 'User ID is required',
+                    'status' => 400
+                ], 400);
+            }
+
+            $orders = Order::where('user_id', $userId)->get();
+
+            if ($orders->isEmpty()) {
+                return response()->json([
+                    'message' => 'No orders found for this user',
+                    'status' => 404
+                ], 404);
+            }
+
+            return response()->json($orders, 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 500
+            ], 500);
+        }
     }
+
 
     /**
      * Show the form for editing the specified resource.
